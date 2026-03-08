@@ -1,287 +1,1330 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PageFly — Build Shopify Pages That Print Money</title>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/index.css">
+  <!-- Outfit + DM Sans from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
 
-    <title>Pagefly</title>
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            violet:   '#7C3AED',
+            'violet-l':'#8B5CF6',
+            pink:     '#EC4899',
+            orange:   '#F97316',
+            'orange-l':'#FB923C',
+            amber:    '#FBBF24',
+            ink:      '#0D1117',
+            'ink-2':  '#161B22',
+            'ink-3':  '#21262D',
+            mist:     '#F6F8FA',
+            'mist-2': '#EFF2F5',
+            border:   '#E1E4E8',
+            muted:    '#6E7681',
+          },
+          fontFamily: {
+            heading: ['Outfit', 'sans-serif'],
+            body:    ['"DM Sans"', 'sans-serif'],
+          },
+          backgroundImage: {
+            'grad-main':   'linear-gradient(135deg, #7C3AED, #EC4899, #F97316)',
+            'grad-violet': 'linear-gradient(135deg, #7C3AED, #8B5CF6)',
+            'grad-warm':   'linear-gradient(135deg, #EC4899, #F97316)',
+            'grad-hero':   'radial-gradient(ellipse 80% 60% at 60% 30%, rgba(124,58,237,0.12) 0%, rgba(236,72,153,0.08) 40%, rgba(249,115,22,0.06) 70%, transparent 100%)',
+            'grad-mesh':   'linear-gradient(135deg, #faf8ff 0%, #fff5fb 50%, #fffbf5 100%)',
+          },
+          boxShadow: {
+            card:    '0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08)',
+            'card-lg':'0 4px 6px rgba(0,0,0,0.05), 0 16px 40px rgba(0,0,0,0.1)',
+            violet:  '0 8px 32px rgba(124,58,237,0.3)',
+            'violet-sm':'0 4px 16px rgba(124,58,237,0.2)',
+          },
+          keyframes: {
+            fadeUp:   { from:{ opacity:'0', transform:'translateY(24px)' }, to:{ opacity:'1', transform:'translateY(0)' } },
+            float:    { '0%,100%':{ transform:'translateY(0)' }, '50%':{ transform:'translateY(-10px)' } },
+            marquee:  { from:{ transform:'translateX(0)' }, to:{ transform:'translateX(-50%)' } },
+            shimmer:  { from:{ backgroundPosition:'200% center' }, to:{ backgroundPosition:'-200% center' } },
+            pulse2:   { '0%,100%':{ opacity:'1' }, '50%':{ opacity:'0.4' } },
+            spin:     { to:{ transform:'rotate(360deg)' } },
+          },
+          animation: {
+            'fade-up':    'fadeUp 0.6s ease both',
+            'float':      'float 5s ease-in-out infinite',
+            'float-slow': 'float 7s ease-in-out infinite',
+            'marquee':    'marquee 28s linear infinite',
+            'shimmer':    'shimmer 3s linear infinite',
+            'pulse2':     'pulse2 2s infinite',
+            'spin-slow':  'spin 8s linear infinite',
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ============================================================
+       CUSTOMIZATION VARS — change palette, radius, speeds here
+    ============================================================ */
+    :root {
+      --violet:     #7C3AED;
+      --pink:       #EC4899;
+      --orange:     #F97316;
+      --ink:        #0D1117;
+      --mist:       #F6F8FA;
+      --border:     #E1E4E8;
+      --muted:      #6E7681;
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  20px;
+      --radius-xl:  32px;
+      --t:          0.3s ease;
+    }
+
+    /* Base */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: #fff; color: var(--ink); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; margin: 0; padding: 0; }
+
+    /* ── Gradient text ─────────────────────────────────── */
+    .grad-text {
+      background: linear-gradient(135deg, #7C3AED, #EC4899, #F97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .grad-text-warm {
+      background: linear-gradient(135deg, #EC4899, #F97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Buttons ───────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: var(--radius-md);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all var(--t);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 16px rgba(124,58,237,0.25);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(124,58,237,0.35);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: var(--violet);
+      color: var(--violet);
+      background: rgba(124,58,237,0.04);
+    }
+    .btn-lg { padding: 16px 32px; font-size: 1rem; border-radius: var(--radius-lg); }
+    .btn-arrow { display: inline-block; transition: transform var(--t); }
+    a:hover .btn-arrow, button:hover .btn-arrow { transform: translateX(4px); }
+
+    /* ── Cards ─────────────────────────────────────────── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+      transition: box-shadow var(--t), transform var(--t), border-color var(--t);
+    }
+    .card:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
+      border-color: rgba(124,58,237,0.3);
+    }
+
+    /* ── Feature icon ──────────────────────────────────── */
+    .feat-icon {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Scroll reveal ─────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Section label ─────────────────────────────────── */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      background: rgba(124,58,237,0.08);
+      border: 1px solid rgba(124,58,237,0.2);
+      color: var(--violet);
+      margin-bottom: 16px;
+    }
+
+    /* ── Navbar scrolled ───────────────────────────────── */
+    .nav-solid {
+      background: rgba(255,255,255,0.95) !important;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 var(--border) !important;
+    }
+
+    /* ── Logo pill ─────────────────────────────────────── */
+    .logo-pill {
+      padding: 6px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      font-family: 'Outfit', sans-serif;
+      transition: all var(--t);
+      white-space: nowrap;
+    }
+    .logo-pill:hover { border-color: var(--violet); color: var(--violet); }
+
+    /* ── Testimonial ───────────────────────────────────── */
+    .testi-card {
+      border-left: 3px solid;
+      border-image: linear-gradient(180deg, #7C3AED, #F97316) 1;
+    }
+
+    /* ── Pricing Pro ───────────────────────────────────── */
+    .pricing-pro {
+      background: linear-gradient(160deg, #faf8ff, #fff5fb);
+      border: 2px solid rgba(124,58,237,0.35);
+      box-shadow: 0 0 0 4px rgba(124,58,237,0.06), 0 16px 48px rgba(124,58,237,0.15);
+    }
+
+    /* ── FAQ ───────────────────────────────────────────── */
+    .faq-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-item.open .faq-body { max-height: 300px; }
+    .faq-item.open .faq-q { color: var(--violet); }
+    .faq-item.open { border-color: rgba(124,58,237,0.3); }
+    .faq-icon { transition: transform 0.35s ease; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--violet); }
+
+    /* ── Marquee ───────────────────────────────────────── */
+    .marquee-track { animation: marquee 28s linear infinite; }
+
+    /* ── Shimmer CTA ───────────────────────────────────── */
+    .btn-shimmer {
+      background: linear-gradient(135deg, #7C3AED 0%, #EC4899 33%, #F97316 66%, #7C3AED 100%);
+      background-size: 300% auto;
+      animation: shimmer 3s linear infinite;
+      color: #fff;
+      border: none;
+    }
+    .btn-shimmer:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 12px 40px rgba(124,58,237,0.4); }
+
+    /* ── Progress ring (hero stat) ─────────────────────── */
+    .ring-progress { transform: rotate(-90deg); transform-origin: 50% 50%; }
+
+    /* ── Step connector ────────────────────────────────── */
+    .step-line { background: linear-gradient(180deg, #7C3AED, #F97316); }
+
+    /* ── Aurora hero bg ────────────────────────────────── */
+    .aurora {
+      background:
+        radial-gradient(ellipse 70% 50% at 70% 20%, rgba(124,58,237,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 30% 70%, rgba(236,72,153,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(249,115,22,0.07) 0%, transparent 60%),
+        #ffffff;
+    }
+
+    /* Floating card anim helpers */
+    .anim-float    { animation: float 5s ease-in-out infinite; }
+    .anim-float-d1 { animation: float 6s 1s ease-in-out infinite; }
+    .anim-float-d2 { animation: float 7s 2s ease-in-out infinite; }
+
+    /* ── Keyframes ─────────────────────────────────────── */
+    @keyframes fadeUp  { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes float   { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+    @keyframes marquee { from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+    @keyframes shimmer { from{ background-position:200% center; } to{ background-position:-200% center; } }
+
+    /* Mobile menu */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+
+    /* Stat number */
+    .stat-n {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+  </style>
 </head>
-<body>
 
-<header class="header-section">
-    <div class="menu">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="#"></a>
-                <a href="#"><img class="header-image" src="img/logo.png" alt=""></a>
+<body class="bg-white font-body text-ink">
 
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+<!-- ================================================================
+     MOBILE MENU
+================================================================ -->
+<div id="mobile-menu"
+     class="fixed inset-0 z-50 bg-white flex-col justify-center items-center gap-6 px-6"
+     style="display:none">
+  <button id="close-menu" class="absolute top-5 right-6 p-2" aria-label="Close menu">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <a href="#features"     class="font-heading font-bold text-3xl text-ink hover:text-violet transition-colors">Features</a>
+  <a href="#how-it-works" class="font-heading font-bold text-3xl text-ink hover:text-violet transition-colors">How It Works</a>
+  <a href="#pricing"      class="font-heading font-bold text-3xl text-ink hover:text-violet transition-colors">Pricing</a>
+  <a href="#faq"          class="font-heading font-bold text-3xl text-ink hover:text-violet transition-colors">FAQ</a>
+  <a href="#pricing" class="btn btn-primary btn-lg mt-4 w-full justify-center">Start Free Trial <span class="btn-arrow">→</span></a>
+</div>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-left align-items-center">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Feature <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Pricing</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Showcase</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Templates</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Affiliate</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-search"></i></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-info" href="#">TRY PAGEFLYFREE</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+<!-- ================================================================
+     NAVBAR
+================================================================ -->
+<nav id="navbar"
+     class="fixed top-0 inset-x-0 z-40 h-[68px] flex items-center border-b border-transparent transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-5 w-full flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2.5 font-heading font-extrabold text-xl text-ink">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold"
+           style="background:linear-gradient(135deg,#7C3AED,#EC4899)">P</div>
+      PageFly
+    </a>
+
+    <!-- Desktop links -->
+    <ul class="hidden lg:flex items-center gap-1">
+      <li><a href="#features"     class="px-4 py-2 font-body font-medium text-sm text-muted hover:text-ink rounded-lg hover:bg-mist transition-all duration-300">Features</a></li>
+      <li><a href="#how-it-works" class="px-4 py-2 font-body font-medium text-sm text-muted hover:text-ink rounded-lg hover:bg-mist transition-all duration-300">How It Works</a></li>
+      <li><a href="#showcase"     class="px-4 py-2 font-body font-medium text-sm text-muted hover:text-ink rounded-lg hover:bg-mist transition-all duration-300">Showcase</a></li>
+      <li><a href="#pricing"      class="px-4 py-2 font-body font-medium text-sm text-muted hover:text-ink rounded-lg hover:bg-mist transition-all duration-300">Pricing</a></li>
+    </ul>
+
+    <div class="hidden lg:flex items-center gap-3">
+      <a href="#" class="font-body font-medium text-sm text-muted hover:text-ink transition-colors duration-300">Log in</a>
+      <a href="#pricing" class="btn btn-primary">Get Started Free <span class="btn-arrow">→</span></a>
     </div>
-</header>
-<!--end of header section-->
 
+    <button id="open-menu" class="lg:hidden p-2 rounded-lg hover:bg-mist transition-colors" aria-label="Open menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+  </div>
+</nav>
 
-<!--start of partner section-->
-<section class="partners">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xl-12 col-lg-12 ">
-                <div class="inner-text">
-                    <h1>Partners</h1>
-                    <div class="Be-text">
-                        <h2>Be Our Partner</h2>
-                        <h3>Why us</h3>
-                    </div>
-                </div>
-            </div>
+<main>
+
+<!-- ================================================================
+     HERO SECTION
+================================================================ -->
+<section class="aurora relative min-h-screen flex items-center pt-[68px] overflow-hidden" aria-label="Hero">
+
+  <!-- Subtle orb decorations -->
+  <div class="absolute w-[500px] h-[500px] rounded-full opacity-[0.06] pointer-events-none"
+       style="background:radial-gradient(circle, #7C3AED, transparent); top:-100px; right:-80px"></div>
+  <div class="absolute w-[400px] h-[400px] rounded-full opacity-[0.05] pointer-events-none"
+       style="background:radial-gradient(circle, #F97316, transparent); bottom:-80px; left:-60px"></div>
+
+  <div class="max-w-7xl mx-auto px-5 py-20 w-full">
+    <div class="grid lg:grid-cols-[1fr_1.1fr] gap-16 items-center">
+
+      <!-- Left content -->
+      <div>
+        <!-- Label -->
+        <div class="section-label" style="animation:fadeUp 0.5s ease both">#1 Shopify Page Builder · 100k+ Stores</div>
+
+        <h1 class="font-heading font-black leading-[1.08] tracking-tight mb-6"
+            style="font-size:clamp(2.8rem,5.5vw,4.4rem); animation:fadeUp 0.6s 0.08s ease both; opacity:0">
+          Build Shopify Pages<br />
+          That <span class="grad-text">Print Money.</span>
+        </h1>
+
+        <p class="font-body text-lg text-muted leading-relaxed max-w-[460px] mb-9"
+           style="animation:fadeUp 0.6s 0.16s ease both; opacity:0">
+          The drag-and-drop page builder trusted by 100,000 Shopify merchants to create stunning landing pages and product pages that convert — without writing a line of code.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-wrap gap-3 mb-10" style="animation:fadeUp 0.6s 0.24s ease both; opacity:0">
+          <a href="#pricing" class="btn btn-primary btn-lg">
+            Start Building Free <span class="btn-arrow">→</span>
+          </a>
+          <a href="#showcase" class="btn btn-ghost btn-lg">Watch Demo</a>
         </div>
+
+        <!-- Social proof -->
+        <div class="flex items-center gap-4" style="animation:fadeUp 0.6s 0.32s ease both; opacity:0">
+          <div class="flex">
+            <div class="w-9 h-9 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold text-white" style="background:linear-gradient(135deg,#7C3AED,#8B5CF6); margin-left:0">JK</div>
+            <div class="w-9 h-9 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold text-white -ml-2.5" style="background:linear-gradient(135deg,#EC4899,#F97316)">SL</div>
+            <div class="w-9 h-9 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold text-white -ml-2.5" style="background:linear-gradient(135deg,#F97316,#FBBF24)">AJ</div>
+            <div class="w-9 h-9 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold -ml-2.5 bg-mist text-muted">+</div>
+          </div>
+          <div class="text-sm text-muted">
+            <span class="text-yellow-500">★★★★★</span>
+            <span class="font-semibold text-ink ml-1">4.9/5</span> from 3,200+ reviews
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: floating product UI -->
+      <div class="relative" style="animation:fadeUp 0.7s 0.2s ease both; opacity:0">
+
+        <!-- Main card — editor preview -->
+        <div class="card p-0 overflow-hidden anim-float"
+             style="box-shadow:0 20px 60px rgba(124,58,237,0.15), 0 4px 16px rgba(0,0,0,0.08)">
+          <!-- Top bar -->
+          <div class="flex items-center gap-3 px-4 py-3 bg-mist border-b border-border">
+            <div class="flex gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-red-400"></span>
+              <span class="w-3 h-3 rounded-full bg-amber"></span>
+              <span class="w-3 h-3 rounded-full bg-green-400"></span>
+            </div>
+            <div class="flex-1 bg-white border border-border rounded-md px-3 py-1.5 text-xs text-muted flex items-center gap-2">
+              🔒 mystore.myshopify.com/products/summer-drop
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="px-2.5 py-1 rounded-md text-xs font-semibold text-violet bg-violet/8 border border-violet/20">Preview</div>
+            </div>
+          </div>
+
+          <!-- Editor canvas mockup -->
+          <div class="flex" style="height:340px; background:#fafbff">
+            <!-- Left panel -->
+            <div class="border-r border-border p-3 flex flex-col gap-2 shrink-0" style="width:155px; background:#fff">
+              <div class="text-[0.62rem] font-bold uppercase tracking-widest text-muted mb-1">Elements</div>
+              <div class="flex items-center gap-2 px-2 py-2 rounded-lg bg-violet/8 border border-violet/20 text-[0.7rem] font-semibold text-violet">
+                <span>⬛</span> Hero Section
+              </div>
+              <div class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-mist text-[0.7rem] text-muted transition-colors">
+                <span>🖼</span> Image Block
+              </div>
+              <div class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-mist text-[0.7rem] text-muted transition-colors">
+                <span>📝</span> Text Block
+              </div>
+              <div class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-mist text-[0.7rem] text-muted transition-colors">
+                <span>🛒</span> Buy Button
+              </div>
+              <div class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-mist text-[0.7rem] text-muted transition-colors">
+                <span>⏱</span> Countdown
+              </div>
+              <div class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-mist text-[0.7rem] text-muted transition-colors">
+                <span>⭐</span> Reviews
+              </div>
+              <div class="mt-auto">
+                <div class="h-px bg-border mb-3"></div>
+                <div class="text-[0.62rem] font-bold uppercase tracking-widest text-muted mb-2">Style</div>
+                <div class="flex gap-1.5 flex-wrap">
+                  <div class="w-5 h-5 rounded" style="background:#7C3AED"></div>
+                  <div class="w-5 h-5 rounded" style="background:#EC4899"></div>
+                  <div class="w-5 h-5 rounded" style="background:#F97316"></div>
+                  <div class="w-5 h-5 rounded" style="background:#0D1117"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Canvas area -->
+            <div class="flex-1 p-4 overflow-hidden flex flex-col gap-3">
+              <!-- Simulated page content -->
+              <div class="rounded-xl overflow-hidden border-2 border-violet/30 relative flex-1 flex flex-col"
+                   style="background:linear-gradient(135deg,#7C3AED,#EC4899)">
+                <div class="p-5 text-white">
+                  <div class="text-[0.65rem] uppercase tracking-widest opacity-60 mb-2">Hero Section · Selected</div>
+                  <div class="h-4 rounded-full bg-white/30 w-3/4 mb-2"></div>
+                  <div class="h-3 rounded-full bg-white/20 w-1/2 mb-4"></div>
+                  <div class="flex gap-2">
+                    <div class="px-4 py-1.5 rounded-lg bg-white text-violet text-xs font-bold">Shop Now</div>
+                    <div class="px-4 py-1.5 rounded-lg border border-white/40 text-white text-xs">Learn More</div>
+                  </div>
+                </div>
+                <!-- Resize handle -->
+                <div class="absolute bottom-2 right-2 w-3 h-3 rounded-sm bg-white/50"></div>
+              </div>
+              <!-- Below fold elements -->
+              <div class="grid grid-cols-3 gap-2">
+                <div class="h-14 rounded-lg border border-border bg-white flex items-center justify-center text-base">🛍️</div>
+                <div class="h-14 rounded-lg border border-border bg-white flex items-center justify-center text-base">⭐</div>
+                <div class="h-14 rounded-lg border-2 border-dashed border-violet/30 bg-violet/4 flex items-center justify-center text-violet text-lg">+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating stat badges -->
+        <div class="absolute -top-5 -left-6 card px-4 py-2.5 items-center gap-3 anim-float-d1 hidden xl:flex"
+             style="box-shadow:0 8px 24px rgba(0,0,0,0.1)">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-base"
+               style="background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(236,72,153,0.1))">📈</div>
+          <div>
+            <div class="font-heading font-extrabold text-sm grad-text-warm">+327%</div>
+            <div class="text-[0.68rem] text-muted">Avg. Conversion</div>
+          </div>
+        </div>
+
+        <div class="absolute -bottom-5 -right-6 card px-4 py-2.5 items-center gap-3 anim-float-d2 hidden xl:flex"
+             style="box-shadow:0 8px 24px rgba(0,0,0,0.1)">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-base"
+               style="background:rgba(249,115,22,0.1)">⚡</div>
+          <div>
+            <div class="font-heading font-bold text-sm text-ink">Live in 5 min</div>
+            <div class="text-[0.68rem] text-muted">Zero code needed</div>
+          </div>
+        </div>
+
+        <div class="absolute top-1/3 -right-8 card px-3 py-2 hidden xl:flex items-center gap-2 anim-float"
+             style="box-shadow:0 8px 24px rgba(0,0,0,0.1)">
+          <span class="text-yellow-400 text-sm">★★★★★</span>
+          <span class="font-heading font-bold text-xs text-ink">4.9/5</span>
+        </div>
+      </div>
+
     </div>
+  </div>
 </section>
 
-<!--end of partner section-->
-
-<!--start of dedicated section-->
-<section class="dedicated">
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-4 col-lg-4 col-md-4">
-                <div class="testing-inner">
-                    <div class="client-inner">
-                        <img src="img/dedicated-team.png" alt="">
-                        <h4>Dedicated Team</h4>
-                        <p>At PageFly, no one is superior. Even our CEO will directly help you with technical issues.
-                            You are guaranteed a CEO-satisfaction level.</p>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-xl-4 col-lg-4 col-md-4">
-                <div class="testing-inner">
-                    <div class="client-inner">
-                        <img src="img/happiness-guaranteed.png" alt="">
-                        <h4>Happiness guaranteed</h4>
-                        <p>Armed with expertise in various development trends, we support you beyond tools andfeatures.
-                            We assure your happiness exclusively.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-4 col-lg-4 col-md-4">
-                <div class="testing-inner">
-                    <div class="client-inner">
-                        <img src="img/money-is-not-everything.png" alt="">
-                        <h4>Money is not everything</h4>
-                        <p>Each project is handled with care and devotion, not fee. We are here, giving you the best
-                            support team you ever experienced.</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+<!-- ================================================================
+     LOGOS / TRUSTED BY
+================================================================ -->
+<section class="py-14 border-t border-b border-border overflow-hidden bg-mist" aria-label="Trusted by">
+  <p class="text-center font-body text-sm text-muted mb-8 tracking-wide">Powering stores at leading brands</p>
+  <div class="relative overflow-hidden">
+    <div class="absolute inset-y-0 left-0 w-24 z-10 pointer-events-none" style="background:linear-gradient(90deg,#F6F8FA,transparent)"></div>
+    <div class="absolute inset-y-0 right-0 w-24 z-10 pointer-events-none" style="background:linear-gradient(-90deg,#F6F8FA,transparent)"></div>
+    <div class="marquee-track flex items-center gap-10 w-max">
+      <span class="logo-pill">Gymshark</span>
+      <span class="logo-pill">Allbirds</span>
+      <span class="logo-pill">Kylie Beauty</span>
+      <span class="logo-pill">Fashion Nova</span>
+      <span class="logo-pill">Chubbies</span>
+      <span class="logo-pill">Pura Vida</span>
+      <span class="logo-pill">Ridge Wallet</span>
+      <span class="logo-pill">Steve Madden</span>
+      <span class="logo-pill">Bombas</span>
+      <span class="logo-pill">Vuori</span>
+      <!-- duplicate -->
+      <span class="logo-pill">Gymshark</span>
+      <span class="logo-pill">Allbirds</span>
+      <span class="logo-pill">Kylie Beauty</span>
+      <span class="logo-pill">Fashion Nova</span>
+      <span class="logo-pill">Chubbies</span>
+      <span class="logo-pill">Pura Vida</span>
+      <span class="logo-pill">Ridge Wallet</span>
+      <span class="logo-pill">Steve Madden</span>
+      <span class="logo-pill">Bombas</span>
+      <span class="logo-pill">Vuori</span>
     </div>
+  </div>
 </section>
 
-<!--end of dedicated section-->
-
-<!--start of join us section-->
-<section class="join">
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-7">
-                <div class="inner-img">
-                    <img src="img/bearie-partner.png" alt="">
-                </div>
-            </div>
-            <div class="col-xl-5">
-                <div class="inner-text">
-                    <h1>Join us</h1>
-                    <h4>WE'LL CREATE SOMETHING AMAZING TOGETHER</h4>
-                    <p>We partner with forward-thinking associations and innovative groups to ensure our customer base
-                        has the tools needed to deliver true value to grow your business on a full-scale level.</p>
-                </div>
-            </div>
-        </div>
+<!-- ================================================================
+     FEATURES
+================================================================ -->
+<section class="py-24 md:py-32 px-5" id="features" aria-labelledby="features-heading">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <div class="section-label">Features</div>
+      <h2 class="font-heading font-black tracking-tight mb-4" style="font-size:clamp(2rem,4vw,3rem)" id="features-heading">
+        Everything you need to <span class="grad-text">convert more.</span>
+      </h2>
+      <p class="font-body text-muted text-lg max-w-[520px] mx-auto leading-relaxed">
+        PageFly gives your Shopify store the conversion edge — with a professional toolkit that anyone can use.
+      </p>
     </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <div class="card p-7 reveal">
+        <div class="feat-icon mb-5" style="background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(139,92,246,0.1))">🎨</div>
+        <h3 class="font-heading font-bold text-lg mb-3">Drag-and-Drop Editor</h3>
+        <p class="font-body text-muted text-sm leading-relaxed">100+ pre-built elements. Build professional pages visually — no developer, no budget blow-out, no waiting.</p>
+      </div>
+
+      <div class="card p-7 reveal" style="transition-delay:60ms">
+        <div class="feat-icon mb-5" style="background:linear-gradient(135deg,rgba(236,72,153,0.1),rgba(249,115,22,0.08))">📱</div>
+        <h3 class="font-heading font-bold text-lg mb-3">Mobile-First Responsive</h3>
+        <p class="font-body text-muted text-sm leading-relaxed">Every page auto-adapts to any screen. Preview and fine-tune mobile, tablet, and desktop in real time.</p>
+      </div>
+
+      <div class="card p-7 reveal" style="transition-delay:120ms">
+        <div class="feat-icon mb-5" style="background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(251,191,36,0.1))">⚡</div>
+        <h3 class="font-heading font-bold text-lg mb-3">Blazing Page Speed</h3>
+        <p class="font-body text-muted text-sm leading-relaxed">PageFly pages score 90+ on Google PageSpeed. Lazy loading, minified output, and CDN delivery included.</p>
+      </div>
+
+      <div class="card p-7 reveal" style="transition-delay:180ms">
+        <div class="feat-icon mb-5" style="background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(236,72,153,0.08))">📊</div>
+        <h3 class="font-heading font-bold text-lg mb-3">A/B Testing Built In</h3>
+        <p class="font-body text-muted text-sm leading-relaxed">Run split tests on headlines, layouts, and CTAs. Let data pick your winner and watch revenue climb.</p>
+      </div>
+
+      <div class="card p-7 reveal" style="transition-delay:240ms">
+        <div class="feat-icon mb-5" style="background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(59,130,246,0.08))">🔌</div>
+        <h3 class="font-heading font-bold text-lg mb-3">Deep Shopify Integration</h3>
+        <p class="font-body text-muted text-sm leading-relaxed">Syncs with products, metafields, and apps like Klaviyo, ReCharge, Judge.me right out of the box.</p>
+      </div>
+
+      <div class="card p-7 reveal" style="transition-delay:300ms">
+        <div class="feat-icon mb-5" style="background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(249,115,22,0.1))">🎯</div>
+        <h3 class="font-heading font-bold text-lg mb-3">Conversion Elements</h3>
+        <p class="font-body text-muted text-sm leading-relaxed">Countdown timers, sticky add-to-cart bars, and upsell blocks purpose-built to increase your AOV.</p>
+      </div>
+
+    </div>
+  </div>
 </section>
 
-
-<!--end of join us section-->
-<!--start of our partners section-->
-<section class="our-partners">
-    <div class="container">
-        <h1>Our Partner</h1>
-        <div class="row">
-            <div class="col-xl-4 col-lg-4 col-md-4">
-                <div class="inner-img2">
-                    <img src="img/growave.png" alt="">
-                </div>
-                <h4>Growave | Reviews, Loyalty ++</h4>
-                <p>Extend your marketing with powerful tools for photo reviews, wishlist, loyalty programs, referrals
-                    and UGC</p>
-            </div>
-            <div class="col-xl-4 col-lg-4 col-md-4">
-                <div class="inner-img2">
-                    <img src="img/saleshunter.png" alt="">
-                </div>
-                <h4>Theme Developer</h4>
-                <p>Best converting Shopify theme</p>
-            </div>
-            <div class="col-xl-4 col-lg-4 col-md-4">
-                <div class="inner-img2">
-                    <img src="img/loox.png" alt="">
-                </div>
-                <h4>Loox App</h4>
-                <p>Collect photo reviews & boost sales with beautiful reviews</p>
-            </div>
-
-        </div>
+<!-- ================================================================
+     HOW IT WORKS — alternating split layout
+================================================================ -->
+<section class="py-24 md:py-32 px-5 bg-mist border-t border-b border-border" id="how-it-works" aria-labelledby="hiw-heading">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <div class="section-label">How It Works</div>
+      <h2 class="font-heading font-black tracking-tight mb-4" style="font-size:clamp(2rem,4vw,3rem)" id="hiw-heading">
+        From zero to live in <span class="grad-text">3 simple steps.</span>
+      </h2>
     </div>
+
+    <div class="flex flex-col gap-6">
+
+      <!-- Step 1 -->
+      <div class="card p-0 overflow-hidden reveal">
+        <div class="grid md:grid-cols-2">
+          <div class="p-10 flex flex-col justify-center">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center font-heading font-black text-xl text-white mb-6"
+                 style="background:linear-gradient(135deg,#7C3AED,#8B5CF6)">1</div>
+            <h3 class="font-heading font-bold text-2xl mb-4">Pick a template or start fresh</h3>
+            <p class="font-body text-muted leading-relaxed">Browse 100+ industry-proven templates for landing pages, product pages, and homepages — or open a blank canvas and build your vision from scratch.</p>
+            <div class="flex items-center gap-2 mt-6 font-body text-sm text-violet font-semibold">
+              <span>View template library</span> <span>→</span>
+            </div>
+          </div>
+          <div class="border-t md:border-t-0 md:border-l border-border flex items-center justify-center p-10"
+               style="background:linear-gradient(135deg,rgba(124,58,237,0.04),rgba(139,92,246,0.04))">
+            <div class="text-center">
+              <div class="text-6xl mb-4">🗂️</div>
+              <div class="font-heading font-bold text-ink mb-1">100+ Templates</div>
+              <div class="font-body text-sm text-muted">Ready to customize instantly</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="card p-0 overflow-hidden reveal">
+        <div class="grid md:grid-cols-2">
+          <div class="border-b md:border-b-0 md:border-r border-border flex items-center justify-center p-10 order-2 md:order-1"
+               style="background:linear-gradient(135deg,rgba(236,72,153,0.04),rgba(249,115,22,0.04))">
+            <div class="text-center">
+              <div class="text-6xl mb-4">✏️</div>
+              <div class="font-heading font-bold text-ink mb-1">Visual Editor</div>
+              <div class="font-body text-sm text-muted">Real-time preview, no refresh</div>
+            </div>
+          </div>
+          <div class="p-10 flex flex-col justify-center order-1 md:order-2">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center font-heading font-black text-xl text-white mb-6"
+                 style="background:linear-gradient(135deg,#EC4899,#F97316)">2</div>
+            <h3 class="font-heading font-bold text-2xl mb-4">Customize with your brand</h3>
+            <p class="font-body text-muted leading-relaxed">Drag elements onto the canvas, swap colors, upload images, and connect your live Shopify products. What you see is exactly what customers see.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="card p-0 overflow-hidden reveal">
+        <div class="grid md:grid-cols-2">
+          <div class="p-10 flex flex-col justify-center">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center font-heading font-black text-xl text-white mb-6"
+                 style="background:linear-gradient(135deg,#F97316,#FBBF24)">3</div>
+            <h3 class="font-heading font-bold text-2xl mb-4">Publish and watch sales roll in</h3>
+            <p class="font-body text-muted leading-relaxed">Hit Publish and your page is live on Shopify instantly. Track performance, run A/B tests, and iterate — all without touching a line of code.</p>
+            <div class="flex items-center gap-2 mt-6 font-body text-sm text-orange font-semibold">
+              <span>Start publishing now</span> <span>→</span>
+            </div>
+          </div>
+          <div class="border-t md:border-t-0 md:border-l border-border flex items-center justify-center p-10"
+               style="background:linear-gradient(135deg,rgba(249,115,22,0.04),rgba(251,191,36,0.04))">
+            <div class="text-center">
+              <div class="text-6xl mb-4">🚀</div>
+              <div class="font-heading font-bold text-ink mb-1">One-Click Publish</div>
+              <div class="font-body text-sm text-muted">Live on Shopify in seconds</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </section>
 
-<!--end of our partners section-->
-
-<!--start of become our partner-->
-
-<section class="become-partner">
-    <div class="container">
-        <h2>Become our partner in 4 simple steps</h2>
-        <div class="row">
-            <div class="col-md-3">
-                <h1>01</h1>
-                <h4>CONTACT US</h4>
-                <p>First, drop us your messages! We are excited to connect with you and extend our network of
-                    talents.</p>
-            </div>
-            <div class="col-md-3">
-                <h1>02</h1>
-                <h4>CRAFT PARTNERSHIP STRATEGY</h4>
-                <p>Roll your sleeves up high because we will start working right away. Let's explore the vast
-                    opportunities for development, marketing and business to flourish..</p>
-            </div>
-            <div class="col-md-3">
-                <h1>03</h1>
-                <h4>BUILD INTEGRATION FEATURE</h4>
-                <p>Here comes the blood and sweat. While our 2 teams are preparing for the amazing integration, stay
-                    connected to update the hottest news and help out each other.</p>
-            </div>
-            <div class="col-md-3">
-                <h1>04</h1>
-                <h4>LAUNCH</h4>
-                <p>The time has come.
-                    3... 2... 1... The partnership is officially launched!</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xl-12 text-center">
-                <a class="btn btn-info " href="#">BECOME OUR PARTNER</a>
-            </div>
-        </div>
+<!-- ================================================================
+     PRODUCT SHOWCASE
+================================================================ -->
+<section class="py-24 md:py-32 px-5" id="showcase" aria-labelledby="showcase-heading">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14 reveal">
+      <div class="section-label">Live Demo</div>
+      <h2 class="font-heading font-black tracking-tight mb-4" style="font-size:clamp(2rem,4vw,3rem)" id="showcase-heading">
+        See PageFly in <span class="grad-text">action.</span>
+      </h2>
+      <p class="font-body text-muted text-lg max-w-[480px] mx-auto leading-relaxed">
+        The actual editor — powerful for pros, simple enough for beginners.
+      </p>
     </div>
+
+    <!-- Browser mockup -->
+    <div class="relative max-w-5xl mx-auto reveal">
+
+      <!-- Floating badges — desktop only -->
+      <div class="absolute -left-10 top-1/4 card px-4 py-3 items-center gap-3 hidden xl:flex anim-float-d1">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:rgba(124,58,237,0.08)">📈</div>
+        <div>
+          <div class="font-heading font-extrabold text-lg grad-text">+240%</div>
+          <div class="text-[0.7rem] text-muted">Revenue growth</div>
+        </div>
+      </div>
+
+      <div class="absolute -right-10 top-1/5 card px-4 py-3 items-center gap-3 hidden xl:flex anim-float-d2">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:rgba(249,115,22,0.08)">🎯</div>
+        <div>
+          <div class="font-heading font-extrabold text-lg" style="color:#F97316">3.8×</div>
+          <div class="text-[0.7rem] text-muted">Higher conversion</div>
+        </div>
+      </div>
+
+      <div class="absolute -right-8 bottom-1/4 card px-4 py-3 items-center gap-3 hidden xl:flex anim-float">
+        <span class="text-yellow-400">★★★★★</span>
+        <div>
+          <div class="font-heading font-bold text-sm text-ink">4.9 / 5.0</div>
+          <div class="text-[0.68rem] text-muted">3,200+ Reviews</div>
+        </div>
+      </div>
+
+      <!-- Browser chrome -->
+      <div class="rounded-t-2xl overflow-hidden border border-border border-b-0"
+           style="background:#fff; box-shadow:0 4px 6px rgba(0,0,0,0.04)">
+        <div class="flex items-center gap-3 px-5 py-3.5 bg-mist border-b border-border">
+          <div class="flex gap-1.5">
+            <span class="w-3 h-3 rounded-full bg-red-400"></span>
+            <span class="w-3 h-3 rounded-full bg-amber"></span>
+            <span class="w-3 h-3 rounded-full bg-green-400"></span>
+          </div>
+          <div class="flex-1 bg-white border border-border rounded-lg px-4 py-2 text-xs text-muted flex items-center gap-2">
+            🔒 &nbsp;editor.pagefly.io — Live Editor
+          </div>
+          <div class="flex gap-2">
+            <div class="px-3 py-1 rounded-lg bg-white border border-border text-xs text-muted">Desktop</div>
+            <div class="px-3 py-1 rounded-lg bg-white border border-border text-xs text-muted">Mobile</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- App content -->
+      <div class="rounded-b-2xl border border-border border-t-0 overflow-hidden"
+           style="box-shadow:0 20px 60px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06)">
+        <div class="flex bg-white" style="height:420px">
+
+          <!-- Left sidebar -->
+          <div class="border-r border-border p-4 flex flex-col gap-1.5 shrink-0 overflow-hidden" style="width:200px; background:#fafbff">
+            <div class="text-[0.62rem] font-bold uppercase tracking-widest text-muted mb-2">Page Elements</div>
+            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet/8 border border-violet/20 text-[0.72rem] font-semibold text-violet">⬛ Hero Section</div>
+            <div class="flex items-center gap-2 px-3 py-2 rounded-lg text-[0.72rem] text-muted hover:bg-mist transition-colors">🖼 Product Gallery</div>
+            <div class="flex items-center gap-2 px-3 py-2 rounded-lg text-[0.72rem] text-muted hover:bg-mist transition-colors">📝 Description</div>
+            <div class="flex items-center gap-2 px-3 py-2 rounded-lg text-[0.72rem] text-muted hover:bg-mist transition-colors">🛒 Add to Cart</div>
+            <div class="flex items-center gap-2 px-3 py-2 rounded-lg text-[0.72rem] text-muted hover:bg-mist transition-colors">⭐ Reviews</div>
+            <div class="flex items-center gap-2 px-3 py-2 rounded-lg text-[0.72rem] text-muted hover:bg-mist transition-colors">⏱ Countdown</div>
+            <div class="mt-auto border-t border-border pt-3">
+              <div class="text-[0.62rem] font-bold uppercase tracking-widest text-muted mb-2">Theme Colors</div>
+              <div class="flex gap-2">
+                <div class="w-6 h-6 rounded-full border-2 border-white" style="background:#7C3AED; box-shadow:0 0 0 2px #7C3AED"></div>
+                <div class="w-6 h-6 rounded-full border-2 border-white" style="background:#EC4899"></div>
+                <div class="w-6 h-6 rounded-full border-2 border-white" style="background:#F97316"></div>
+                <div class="w-6 h-6 rounded-full border-2 border-white" style="background:#0D1117"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Canvas -->
+          <div class="flex-1 overflow-hidden flex flex-col">
+            <!-- Toolbar -->
+            <div class="border-b border-border px-4 py-2.5 flex items-center gap-3 bg-white">
+              <div class="text-xs text-muted font-body">Hero Section <span class="text-violet font-semibold">· Selected</span></div>
+              <div class="ml-auto flex gap-2">
+                <div class="px-3 py-1.5 rounded-lg bg-mist border border-border text-xs text-muted font-body font-medium">Undo</div>
+                <div class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white font-heading" style="background:linear-gradient(135deg,#7C3AED,#EC4899)">Publish</div>
+              </div>
+            </div>
+            <!-- Page preview -->
+            <div class="flex-1 overflow-hidden" style="background:#f0f4ff; padding:16px">
+              <div class="rounded-xl overflow-hidden h-full border-2 border-violet/20 flex flex-col"
+                   style="background:linear-gradient(135deg,#7C3AED 0%,#EC4899 60%,#F97316 100%)">
+                <!-- Hero preview -->
+                <div class="p-8 text-white flex-1 flex flex-col justify-center">
+                  <div class="h-3 rounded-full bg-white/20 w-32 mb-3"></div>
+                  <div class="h-6 rounded-full bg-white/40 w-3/5 mb-2"></div>
+                  <div class="h-6 rounded-full bg-white/30 w-2/5 mb-5"></div>
+                  <div class="flex gap-3">
+                    <div class="px-6 py-2.5 rounded-xl bg-white text-violet text-xs font-bold font-heading">Shop Now</div>
+                    <div class="px-6 py-2.5 rounded-xl border border-white/40 text-white text-xs font-body">Learn More</div>
+                  </div>
+                </div>
+                <!-- Footer strip -->
+                <div class="grid grid-cols-3 border-t border-white/15" style="height:70px">
+                  <div class="flex items-center justify-center border-r border-white/15 text-white/70 text-xl">📦</div>
+                  <div class="flex items-center justify-center border-r border-white/15 text-white/70 text-xl">⭐</div>
+                  <div class="flex items-center justify-center text-white/70 text-xl">🛒</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
+<!-- ================================================================
+     STATS
+================================================================ -->
+<section class="py-20 relative overflow-hidden" style="background:linear-gradient(135deg,#0D1117 0%,#1a0a2e 100%)" aria-label="Statistics">
+  <!-- Subtle gradient overlay -->
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 70% 70% at 50% 50%, rgba(124,58,237,0.15) 0%, transparent 70%)"></div>
 
-<!--end of become our partner-->
-<!--footer section start-->
-<footer class="footer-section">
-    <div class="top-widget-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                    <div class="inner-widget">
-                        <h4>Team</h4>
-                        <p>Meet the team </p>
-                        <p>Contact</p>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="inner-widget">
-                        <h4>Community</h4>
-                        <p>Affiliate</p>
-                        <p>Partners</p>
-                        <p>Sopify partners program</p>
-                        <p>Merchant Community</p>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="inner-widget">
-                        <h4>Knowledge</h4>
-                        <p>Blog</p>
-                        <p>Help Center</p>
-                        <p>Academy</p>
-                    </div>
-                </div>
+  <div class="max-w-7xl mx-auto px-5 relative">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
 
-                <div class="col-sm">
-                    <div class="inner-widget">
-                        <h4>Legal</h4>
-                        <p>Privacy Policy - EN</p>
-                        <p>Privacy Policy - DE</p>
-                        <p>Terms of service</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div class="text-center reveal">
+        <div class="stat-n grad-text mb-2" data-target="100000" data-suffix="k+">0</div>
+        <div class="font-body text-sm" style="color:rgba(255,255,255,0.5)">Active Shopify Stores</div>
+      </div>
+
+      <div class="text-center reveal" style="transition-delay:100ms">
+        <div class="stat-n grad-text-warm mb-2" data-target="327" data-suffix="%">0</div>
+        <div class="font-body text-sm" style="color:rgba(255,255,255,0.5)">Avg. Conversion Lift</div>
+      </div>
+
+      <div class="text-center reveal" style="transition-delay:200ms">
+        <div class="stat-n grad-text mb-2" data-target="4.9" data-suffix="/5" data-decimal="true">0</div>
+        <div class="font-body text-sm" style="color:rgba(255,255,255,0.5)">App Store Rating</div>
+      </div>
+
+      <div class="text-center reveal" style="transition-delay:300ms">
+        <div class="stat-n grad-text-warm mb-2" data-target="3200" data-suffix="+">0</div>
+        <div class="font-body text-sm" style="color:rgba(255,255,255,0.5)">Five-Star Reviews</div>
+      </div>
+
     </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     TESTIMONIALS
+================================================================ -->
+<section class="py-24 md:py-32 px-5" aria-labelledby="testi-heading">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <div class="section-label">Testimonials</div>
+      <h2 class="font-heading font-black tracking-tight mb-4" style="font-size:clamp(2rem,4vw,3rem)" id="testi-heading">
+        Merchants <span class="grad-text">love PageFly.</span>
+      </h2>
+      <p class="font-body text-muted text-lg max-w-[480px] mx-auto">Real results from real store owners who made the switch.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-5">
+
+      <article class="card p-8 testi-card reveal">
+        <div class="text-yellow-400 text-base mb-4">★★★★★</div>
+        <p class="font-body text-ink-3 leading-relaxed mb-6 text-[0.95rem]">
+          "We rebuilt our entire product page with PageFly in an afternoon. Revenue per visitor jumped 41% within two weeks. Highest-ROI app in our Shopify stack."
+        </p>
+        <div class="flex items-center gap-3 pt-4 border-t border-border">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0" style="background:linear-gradient(135deg,#7C3AED,#8B5CF6)">MK</div>
+          <div>
+            <div class="font-heading font-semibold text-sm">Marcus Klein</div>
+            <div class="font-body text-muted text-xs">Founder, Vitalis Supplements</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card p-8 testi-card reveal" style="transition-delay:100ms">
+        <div class="text-yellow-400 text-base mb-4">★★★★★</div>
+        <p class="font-body text-ink-3 leading-relaxed mb-6 text-[0.95rem]">
+          "PageFly paid for itself in 3 days. The countdown timer and sticky cart elements recovered $14k in abandoned carts last month. Can't imagine our store without it."
+        </p>
+        <div class="flex items-center gap-3 pt-4 border-t border-border">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0" style="background:linear-gradient(135deg,#EC4899,#F97316)">SL</div>
+          <div>
+            <div class="font-heading font-semibold text-sm">Sofia Lauper</div>
+            <div class="font-body text-muted text-xs">CEO, Lumière Skincare</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card p-8 testi-card reveal" style="transition-delay:200ms">
+        <div class="text-yellow-400 text-base mb-4">★★★★★</div>
+        <p class="font-body text-ink-3 leading-relaxed mb-6 text-[0.95rem]">
+          "I'm not a developer, but with PageFly I build pages that look like they cost $10k. My Black Friday landing page drove a 290% sales spike vs. last year."
+        </p>
+        <div class="flex items-center gap-3 pt-4 border-t border-border">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0" style="background:linear-gradient(135deg,#F97316,#FBBF24)">AJ</div>
+          <div>
+            <div class="font-heading font-semibold text-sm">Alex Jimenez</div>
+            <div class="font-body text-muted text-xs">Owner, THRVE Activewear</div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PRICING
+================================================================ -->
+<section class="py-24 md:py-32 px-5 bg-mist border-t border-b border-border" id="pricing" aria-labelledby="pricing-heading">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12 reveal">
+      <div class="section-label">Pricing</div>
+      <h2 class="font-heading font-black tracking-tight mb-4" style="font-size:clamp(2rem,4vw,3rem)" id="pricing-heading">
+        Simple, transparent <span class="grad-text">pricing.</span>
+      </h2>
+      <p class="font-body text-muted text-lg max-w-[460px] mx-auto">Start free. Upgrade when you're ready. No hidden fees.</p>
+    </div>
+
+    <!-- Toggle -->
+    <div class="flex items-center justify-center gap-4 mb-12">
+      <span class="font-heading font-semibold text-sm text-ink" id="lbl-monthly">Monthly</span>
+      <label class="relative cursor-pointer" style="width:52px; height:28px">
+        <input type="checkbox" id="billing-toggle" class="sr-only" />
+        <div id="toggle-track" class="absolute inset-0 rounded-full transition-all duration-300"
+             style="background:#E1E4E8"></div>
+        <div class="thumb absolute rounded-full bg-white shadow-sm transition-transform duration-300 z-10"
+             style="top:3px; left:3px; width:20px; height:20px"></div>
+      </label>
+      <span class="font-heading font-semibold text-sm text-muted" id="lbl-annual">
+        Annual
+        <span class="ml-2 px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background:linear-gradient(135deg,#7C3AED,#EC4899)">Save 30%</span>
+      </span>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-5 max-w-5xl mx-auto items-start">
+
+      <!-- Starter -->
+      <div class="card p-8 flex flex-col reveal">
+        <div class="font-body text-xs font-bold uppercase tracking-widest text-muted mb-4">Starter</div>
+        <div class="flex items-baseline gap-1 mb-2">
+          <span class="font-body text-muted text-xl">$</span>
+          <span class="font-heading font-black text-5xl price-amount" data-monthly="0" data-annual="0">0</span>
+          <span class="font-body text-muted text-sm">/mo</span>
+        </div>
+        <p class="font-body text-muted text-sm mb-6 leading-relaxed">Perfect for new stores exploring what's possible.</p>
+        <div class="h-px bg-border mb-6"></div>
+        <ul class="flex flex-col gap-3 flex-1 mb-8">
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>1 published page
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>50+ page elements
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>Mobile-responsive editor
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-muted opacity-50">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(0,0,0,0.06)">✗</span>A/B Testing
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-muted opacity-50">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(0,0,0,0.06)">✗</span>Priority support
+          </li>
+        </ul>
+        <a href="#" class="btn btn-ghost w-full justify-center">Get Started Free</a>
+      </div>
+
+      <!-- Pro — featured -->
+      <div class="pricing-pro rounded-2xl p-8 flex flex-col relative reveal" style="transition-delay:100ms">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-bold text-white whitespace-nowrap font-heading"
+             style="background:linear-gradient(135deg,#7C3AED,#EC4899); box-shadow:0 4px 16px rgba(124,58,237,0.4)">Most Popular</div>
+        <div class="font-body text-xs font-bold uppercase tracking-widest mb-4" style="color:#7C3AED">Pro</div>
+        <div class="flex items-baseline gap-1 mb-2">
+          <span class="font-body text-muted text-xl">$</span>
+          <span class="font-heading font-black text-5xl price-amount" data-monthly="29" data-annual="20">29</span>
+          <span class="font-body text-muted text-sm">/mo</span>
+        </div>
+        <p class="font-body text-muted text-sm mb-6 leading-relaxed">The growth toolkit for stores serious about CRO.</p>
+        <div class="h-px mb-6" style="background:rgba(124,58,237,0.15)"></div>
+        <ul class="flex flex-col gap-3 flex-1 mb-8">
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>Unlimited published pages
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>100+ page elements
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>A/B Testing</li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>Advanced analytics
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>Conversion elements
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>Email + chat support
+          </li>
+        </ul>
+        <a href="#" class="btn btn-shimmer w-full justify-center">Start 14-Day Free Trial <span class="btn-arrow">→</span></a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="card p-8 flex flex-col reveal" style="transition-delay:200ms">
+        <div class="font-body text-xs font-bold uppercase tracking-widest text-muted mb-4">Enterprise</div>
+        <div class="flex items-baseline gap-1 mb-2">
+          <span class="font-body text-muted text-xl">$</span>
+          <span class="font-heading font-black text-5xl price-amount" data-monthly="99" data-annual="69">99</span>
+          <span class="font-body text-muted text-sm">/mo</span>
+        </div>
+        <p class="font-body text-muted text-sm mb-6 leading-relaxed">Built for high-volume brands and agencies.</p>
+        <div class="h-px bg-border mb-6"></div>
+        <ul class="flex flex-col gap-3 flex-1 mb-8">
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>Everything in Pro
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>Multi-store management
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>Custom code injection
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>Dedicated account manager
+          </li>
+          <li class="flex items-center gap-3 text-sm font-body text-ink-3">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] shrink-0" style="background:rgba(124,58,237,0.1); color:#7C3AED">✓</span>White-label option
+          </li>
+        </ul>
+        <a href="#" class="btn btn-ghost w-full justify-center">Talk to Sales</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     FAQ
+================================================================ -->
+<section class="py-24 md:py-32 px-5" id="faq" aria-labelledby="faq-heading">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14 reveal">
+      <div class="section-label">FAQ</div>
+      <h2 class="font-heading font-black tracking-tight mb-4" style="font-size:clamp(2rem,4vw,3rem)" id="faq-heading">
+        Common <span class="grad-text">questions.</span>
+      </h2>
+    </div>
+
+    <div class="max-w-3xl mx-auto flex flex-col gap-3">
+
+      <div class="faq-item card overflow-hidden transition-all duration-300">
+        <button class="faq-q w-full flex items-center justify-between px-7 py-5 text-left font-heading font-semibold text-[0.95rem] text-ink gap-4 transition-colors duration-300" aria-expanded="false">
+          Do I need coding skills to use PageFly?
+          <span class="faq-icon w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted text-xl leading-none shrink-0">+</span>
+        </button>
+        <div class="faq-body">
+          <p class="px-7 pb-6 font-body text-muted text-sm leading-relaxed">Not at all. PageFly is 100% drag-and-drop. If you can use Google Docs, you can build a professional Shopify page with PageFly. No coding knowledge required at any level.</p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden transition-all duration-300">
+        <button class="faq-q w-full flex items-center justify-between px-7 py-5 text-left font-heading font-semibold text-[0.95rem] text-ink gap-4 transition-colors duration-300" aria-expanded="false">
+          Will PageFly slow down my Shopify store?
+          <span class="faq-icon w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted text-xl leading-none shrink-0">+</span>
+        </button>
+        <div class="faq-body">
+          <p class="px-7 pb-6 font-body text-muted text-sm leading-relaxed">No. PageFly is engineered for performance. Our pages use lazy loading, asset minification, and CDN delivery. In independent tests, PageFly pages consistently score 90+ on Google PageSpeed Insights.</p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden transition-all duration-300">
+        <button class="faq-q w-full flex items-center justify-between px-7 py-5 text-left font-heading font-semibold text-[0.95rem] text-ink gap-4 transition-colors duration-300" aria-expanded="false">
+          Can I use PageFly with any Shopify theme?
+          <span class="faq-icon w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted text-xl leading-none shrink-0">+</span>
+        </button>
+        <div class="faq-body">
+          <p class="px-7 pb-6 font-body text-muted text-sm leading-relaxed">Yes. PageFly works alongside any Shopify theme without modifying your theme files. You can mix and match — use your existing theme for some pages and PageFly for high-converting landing pages.</p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden transition-all duration-300">
+        <button class="faq-q w-full flex items-center justify-between px-7 py-5 text-left font-heading font-semibold text-[0.95rem] text-ink gap-4 transition-colors duration-300" aria-expanded="false">
+          Is there a free trial for paid plans?
+          <span class="faq-icon w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted text-xl leading-none shrink-0">+</span>
+        </button>
+        <div class="faq-body">
+          <p class="px-7 pb-6 font-body text-muted text-sm leading-relaxed">Yes — all paid plans come with a 14-day free trial. No credit card required to start. You're only billed after the trial ends, and you can cancel anytime with no questions asked.</p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden transition-all duration-300">
+        <button class="faq-q w-full flex items-center justify-between px-7 py-5 text-left font-heading font-semibold text-[0.95rem] text-ink gap-4 transition-colors duration-300" aria-expanded="false">
+          What happens to my pages if I cancel?
+          <span class="faq-icon w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted text-xl leading-none shrink-0">+</span>
+        </button>
+        <div class="faq-body">
+          <p class="px-7 pb-6 font-body text-muted text-sm leading-relaxed">If you downgrade or cancel, your published pages remain live on your store — they won't disappear. You'll lose editor access until you resubscribe, but your customers won't experience any disruption.</p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden transition-all duration-300">
+        <button class="faq-q w-full flex items-center justify-between px-7 py-5 text-left font-heading font-semibold text-[0.95rem] text-ink gap-4 transition-colors duration-300" aria-expanded="false">
+          Does PageFly integrate with my marketing tools?
+          <span class="faq-icon w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted text-xl leading-none shrink-0">+</span>
+        </button>
+        <div class="faq-body">
+          <p class="px-7 pb-6 font-body text-muted text-sm leading-relaxed">Absolutely. PageFly integrates natively with Klaviyo, Omnisend, Mailchimp, ReCharge, Yotpo, Judge.me, Loox, and dozens more. You can also embed any third-party script using our custom code element.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     CTA BANNER
+================================================================ -->
+<section class="py-24 md:py-32 px-5 relative overflow-hidden" style="background:linear-gradient(135deg,#0D1117 0%,#1a0a2e 100%)" aria-labelledby="cta-heading">
+  <!-- Gradient orbs -->
+  <div class="absolute w-96 h-96 rounded-full pointer-events-none opacity-20"
+       style="background:radial-gradient(circle,#7C3AED,transparent); top:-80px; left:-60px; filter:blur(40px)"></div>
+  <div class="absolute w-80 h-80 rounded-full pointer-events-none opacity-15"
+       style="background:radial-gradient(circle,#F97316,transparent); bottom:-60px; right:-40px; filter:blur(40px)"></div>
+
+  <div class="max-w-4xl mx-auto text-center relative">
+    <div class="section-label mb-6" style="background:rgba(124,58,237,0.15); border-color:rgba(124,58,237,0.3); color:#a78bfa">Ready to grow?</div>
+
+    <h2 class="font-heading font-black tracking-tight text-white mb-5 reveal" style="font-size:clamp(2.2rem,5vw,3.8rem); line-height:1.1" id="cta-heading">
+      Turn your Shopify store into a<br /><span class="grad-text">revenue machine.</span>
+    </h2>
+
+    <p class="font-body text-lg mb-10 max-w-[480px] mx-auto leading-relaxed reveal" style="color:rgba(255,255,255,0.6)">
+      Join 100,000+ merchants already growing with PageFly. Free to start — no credit card needed.
+    </p>
+
+    <div class="flex flex-wrap gap-4 justify-center reveal">
+      <a href="#pricing" class="btn btn-shimmer btn-lg">
+        Start Building Free <span class="btn-arrow">→</span>
+      </a>
+      <a href="#showcase" class="btn btn-lg font-heading" style="background:rgba(255,255,255,0.08); color:#fff; border:1.5px solid rgba(255,255,255,0.15)">
+        Watch Demo
+      </a>
+    </div>
+
+    <p class="font-body text-sm mt-6 reveal" style="color:rgba(255,255,255,0.35)">
+      No credit card &nbsp;·&nbsp; 14-day free trial &nbsp;·&nbsp; Cancel anytime
+    </p>
+  </div>
+</section>
+
+</main>
+
+<!-- ================================================================
+     FOOTER
+================================================================ -->
+<footer class="bg-ink border-t px-5 pt-16 pb-0" style="border-color:rgba(255,255,255,0.08)" role="contentinfo">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+
+      <!-- Brand -->
+      <div class="lg:col-span-1 md:col-span-2">
+        <div class="flex items-center gap-2.5 font-heading font-extrabold text-xl text-white mb-4">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold"
+               style="background:linear-gradient(135deg,#7C3AED,#EC4899)">P</div>
+          PageFly
+        </div>
+        <p class="font-body text-sm leading-relaxed mb-6" style="color:rgba(255,255,255,0.4); max-width:260px">
+          The #1 Shopify page builder trusted by 100,000+ merchants to create pages that convert.
+        </p>
+        <div class="flex gap-2">
+          <a href="#" class="w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-all duration-300 border"
+             style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5)"
+             aria-label="Twitter" onmouseover="this.style.borderColor='#7C3AED';this.style.color='#a78bfa'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.5)'">𝕏</a>
+          <a href="#" class="w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-all duration-300 border"
+             style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5)"
+             aria-label="LinkedIn">in</a>
+          <a href="#" class="w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-all duration-300 border"
+             style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5)"
+             aria-label="YouTube">▶</a>
+        </div>
+      </div>
+
+      <nav aria-label="Product">
+        <div class="font-heading font-bold text-xs uppercase tracking-widest text-white mb-5">Product</div>
+        <ul class="flex flex-col gap-3">
+          <li><a href="#features" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Features</a></li>
+          <li><a href="#pricing"  class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Pricing</a></li>
+          <li><a href="#showcase" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Templates</a></li>
+          <li><a href="#"         class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Changelog</a></li>
+          <li><a href="#"         class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Roadmap</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Company">
+        <div class="font-heading font-bold text-xs uppercase tracking-widest text-white mb-5">Company</div>
+        <ul class="flex flex-col gap-3">
+          <li><a href="#" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">About</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Blog</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Careers</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Press</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Support">
+        <div class="font-heading font-bold text-xs uppercase tracking-widest text-white mb-5">Support</div>
+        <ul class="flex flex-col gap-3">
+          <li><a href="#" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Help Center</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Community</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Tutorials</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-300 hover:text-white" style="color:rgba(255,255,255,0.45)">Status</a></li>
+        </ul>
+      </nav>
+
+    </div>
+
+    <!-- Bottom -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 border-t" style="border-color:rgba(255,255,255,0.08)">
+      <p class="font-body text-sm" style="color:rgba(255,255,255,0.3)">© 2025 PageFly. All rights reserved.</p>
+      <p class="font-body text-sm" style="color:rgba(255,255,255,0.3)">Template by <strong style="color:rgba(255,255,255,0.5)">Tanbir</strong></p>
+    </div>
+  </div>
 </footer>
 
+<!-- ================================================================
+     JAVASCRIPT
+================================================================ -->
+<script>
+  'use strict';
 
-<section class="footer-last">
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="footer-copyright">
-                    <p>Copyright © 2020 PageFly. All rights reserved. Powered by Shopify</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+  // ── Navbar ───────────────────────────────────────────────────────
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('nav-solid', window.scrollY > 20);
+  }, { passive: true });
 
+  // ── Mobile menu ──────────────────────────────────────────────────
+  const mobileMenu = document.getElementById('mobile-menu');
+  document.getElementById('open-menu').addEventListener('click', () => {
+    mobileMenu.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  });
+  const closeMob = () => {
+    mobileMenu.style.display = 'none';
+    document.body.style.overflow = '';
+  };
+  document.getElementById('close-menu').addEventListener('click', closeMob);
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMob));
 
-<!--footer section end-->
+  // ── Scroll reveal ────────────────────────────────────────────────
+  document.querySelectorAll('.reveal').forEach(el => {
+    new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }).observe(el);
+  });
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+  // ── Count-up ─────────────────────────────────────────────────────
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  document.querySelectorAll('[data-target]').forEach(el => {
+    new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        obs.unobserve(el);
+        const target  = parseFloat(el.dataset.target);
+        const suffix  = el.dataset.suffix || '';
+        const decimal = el.dataset.decimal === 'true';
+        const start   = performance.now();
+        const tick = now => {
+          const p = Math.min((now - start) / 2000, 1);
+          const v = target * easeOut(p);
+          el.textContent = target >= 10000 ? Math.round(v / 1000) + 'k' + suffix
+                         : decimal         ? v.toFixed(1) + suffix
+                         :                   Math.round(v).toLocaleString() + suffix;
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    }, { threshold: 0.5 }).observe(el);
+  });
+
+  // ── Pricing toggle ───────────────────────────────────────────────
+  const toggle     = document.getElementById('billing-toggle');
+  const track      = document.getElementById('toggle-track');
+  const thumb      = document.querySelector('.thumb');
+  const lblMonthly = document.getElementById('lbl-monthly');
+  const lblAnnual  = document.getElementById('lbl-annual');
+
+  toggle.addEventListener('change', () => {
+    const annual = toggle.checked;
+    track.style.background = annual ? 'linear-gradient(135deg,#7C3AED,#EC4899)' : '#E1E4E8';
+    thumb.style.transform  = annual ? 'translateX(24px)' : 'translateX(0)';
+    lblMonthly.style.color = annual ? '#6E7681' : '#0D1117';
+    lblAnnual.style.color  = annual ? '#0D1117' : '#6E7681';
+    document.querySelectorAll('.price-amount').forEach(el => {
+      el.textContent = annual ? el.dataset.annual : el.dataset.monthly;
+    });
+  });
+
+  // ── FAQ accordion ────────────────────────────────────────────────
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('button').addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('button').setAttribute('aria-expanded', false);
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        item.querySelector('button').setAttribute('aria-expanded', true);
+      }
+    });
+  });
+
+  // ── Smooth scroll ────────────────────────────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 68, behavior: 'smooth' }); }
+    });
+  });
+</script>
+
 </body>
 </html>
